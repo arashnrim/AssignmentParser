@@ -1,3 +1,6 @@
 .vscode
 input.*
 config.ini
+bin/
+include/
+lib/
