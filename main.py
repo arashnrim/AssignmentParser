@@ -2,6 +2,7 @@ import os
 import argparse
 import json
 import uuid
+import time
 import requests
 from dotenv import load_dotenv
 from dateutil.parser import parse
@@ -117,4 +118,9 @@ else:
         for assignment in assignments:
             create_task(due, assignment)
 
-    print("\nProgram completed.")
+    print("\nProgram completed. Clearing input file...", end="\r")
+    open(input_file, "w").close()
+    time.sleep(2)
+    print("Program completed. Clearing input file... OK", end="\r")
+    time.sleep(2)
+    print("Program completed.")
