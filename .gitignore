@@ -1,7 +1,15 @@
+# Configuration files
 .vscode
+.pylintrc
+
+# Environment variables
 .env
+
+# User-dependent files
 input.*
 config.ini
+
+# venv files
 bin/
 include/
 lib/
