@@ -104,7 +104,8 @@ def create_task(due, name):
         print("Sending \"{}\"... OK".format(name))
 
 try:
-    open(input_file)
+    with open(input_file):
+        pass
 except Exception as e:
     raise MissingInputFileError("The specified input file was not found.") from e
 else:
@@ -121,7 +122,8 @@ else:
             create_task(due, assignment)
 
     print("\nProgram completed. Clearing input file...", end="\r")
-    open(input_file, "w").close()
+    with open(input_file, "w"):
+        pass
     time.sleep(2)
     print("Program completed. Clearing input file... OK", end="\r")
     time.sleep(2)
