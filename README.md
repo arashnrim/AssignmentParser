@@ -1,8 +1,10 @@
+# AssignmentParser
+
 ## Introduction
 
-HomeworkParser is a Python program that takes in a daily homework list and automates the process of adding them as a task in a Todoist account.
+AssignmentParser is a program that takes in a list and automates the process of adding them as a task in a [Todoist](https://todoist.com) account.
 
-While mostly for my personal use, feel free to tweak and use it for you if you have something like this present as well. To learn more about the context that led to the creation of this idea, feel free to check out [CONTEXT.md](https://github.com/arashnrim/HomeworkParser/blob/main/CONTEXT.md).
+Built with [Python](https://python.org), [Requests](https://docs.python-requests.org), and the [Todoist API](https://developer.todoist.com) this program was made to address a minor inconvenience I had. To understand the context that led to the creation of this project, take a look at [CONTEXT.md](https://github.com/arashnrim/AssignmentParser/blob/main/CONTEXT.md).
 
 ## Contributing
 

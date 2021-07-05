@@ -1,15 +1,42 @@
-This file explains the context behind why and how Homework Parser works.
+This file explains the context behind why and how AssignmentParser works. In essence, the are steps that are involved with making this program possible include:
 
-## Compiled list
+1. [compiling the list](#compiling-the-list);
+2. [editing the list](#editing-the-list);
+3. [parsing the tasks](#parsing-the-tasks); and
+4. [syncing the tasks](#syncing-the-tasks).
 
-(Almost) every day, the Exco members of my class compiles and sends the daily list of homework into the class chat (thank you!). An example of such a list looks like the image shown below.
+## Compiling the list
 
-<img height="350px" src="example.png">
+On a daily basis, after the school day has ended, the executive committee of the class spends time to create a compiled list with the daily assignments and homework given for the day. It was great that this list had some form of structure, often with the date preceding the tasks and the subjects of the task being separated from the task with a hyphen. Visualised, the list looks similar to the following:
 
-## Manual edits
+```
+**Date**
+Subject - Task
+Subject - Task
 
-Before sending the contents of the message as an input, me, being the perfectionist I am, would take some time to edit the content — be it as minor as ensuring the standardisation of capitalisation or critical as ensuring the spelling of the subject, I try to take some time (though, not a lot) to at least make the content standardised.
+**Date**
+Subject - Task
+Subject - Task
+Subject - Task
 
-## Parsing
+**Date**
+Subject - Task
+```
 
-On input, the program does the rest of the magic — identifying the due dates, associating the due dates with the tasks, and sending them over to Todoist via its API.
+Noticing this pattern, an idea came up — since I am using an online to-do list, why not automate the process? An hour and a half later, the initial code that performed the minimal code was done.
+
+## Editing the list
+
+Usually, there are some discrepancies and minor details of the list that I wish to edit. Be it the capitalisation of certain words or omitting assignments that did not apply to me, I will want to spend some (but not too much) time editing the list to make sure that it looks as I expect.
+
+This is where the idea to have the input separated as another file entirely so that I can edit with ease. In the initial creation of the code, this was a considered factor and included. It does not necessarily require a text (.txt) file as an input, but it is the default.
+
+## Parsing the tasks
+
+After passing the input — that is, the list as a file —, the program performs functions that will parse the code into an expected standardised format before syncing it to the Todoist account.
+
+This is hugely arbitrary — I prefer having the tasks in the format `[subject] task` where `subject` is a two-letter capitalised code denoting the subject, and `task` is self-explanatory. Therefore, the functions in the initial creation of the code were designed specially to do just that.
+
+## Syncing the tasks
+
+The final part of the program is to sync the parsed tasks to the Todoist account. After visiting Todoist's helpful documentation on their developer website, it was easy to get started with using its REST API, especially with the Requests module.
