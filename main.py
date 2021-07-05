@@ -112,6 +112,8 @@ else:
         lines = [line.strip("\n") for line in file.readlines() if line.strip("\n")]
     if not lines:
         raise EmptyInputFileError("The input file is empty.")
+    if not os.getenv("TODOIST_KEY"):
+        raise MissingSecretError("The TODOIST_KEY secret was not found.")
     tasks = parse_tasks(lines)
     print()
     for due, assignments in tasks.items():
