@@ -17,6 +17,13 @@ AP_ARGS = AP_PARSER.parse_args()
 input_type = AP_ARGS.type if AP_ARGS.type else "txt"
 input_file = AP_ARGS.input if AP_ARGS.input else "{}/input.{}".format(ROOT_DIR, input_type)
 
+class MissingInputFileError(Exception):
+    """An exception to handle the missing input file."""
+class EmptyInputFileError(Exception):
+    """An exception to hadle an empty input file."""
+class MissingSecretError(Exception):
+    """An exception to handle the missing .env file."""
+
 def parse_task(line):
     """
     Receives a line and parses it to match the format `[subject] name`, where `subject` is a two-letter code for the subject and `name` is the name of the task.
@@ -97,11 +104,13 @@ def create_task(due, name):
 
 try:
     open(input_file)
-except FileNotFoundError:
-    print("The specified input file was not found. Please try again!")
+except Exception as e:
+    raise MissingInputFileError("The specified input file was not found.") from e
 else:
     with open(input_file) as file:
         lines = [line.strip("\n") for line in file.readlines() if line.strip("\n")]
+    if not lines:
+        raise EmptyInputFileError("The input file is empty.")
     tasks = parse_tasks(lines)
     print()
     for due, assignments in tasks.items():
