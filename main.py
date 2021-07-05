@@ -1,4 +1,8 @@
-import os, argparse, requests, uuid, json
+import os
+import argparse
+import json
+import uuid
+import requests
 from dotenv import load_dotenv
 from dateutil.parser import parse
 
@@ -13,37 +17,67 @@ AP_ARGS = AP_PARSER.parse_args()
 input_type = AP_ARGS.type if AP_ARGS.type else "txt"
 input_file = AP_ARGS.input if AP_ARGS.input else "{}/input.{}".format(ROOT_DIR, input_type)
 
-def parse_task(task):
-    subject, assignment = task.split(" - ")
-    print("Parsing {}...".format(task))
+def parse_task(line):
+    """
+    Receives a line and parses it to match the format `[subject] name`, where `subject` is a two-letter code for the subject and `name` is the name of the task.
 
-    while not(subject.isupper()) or not(len(subject) == 2):
+    If `subject` is invalid, the user is re-prompted until a valid entry is given. Capitalisation is automatic.
+
+    Args:
+        line: A line to parse a task from.
+
+    Returns:
+        A string with the format `[subject] name`, explained above.
+    """
+    subject, name = line.split(" - ")
+    print("Parsing {}...".format(line))
+
+    while not subject.isupper() or not len(subject) == 2:
         subject = input("The subject {} does not meet your standarised format. What should be the corrected term? ".format(subject)).upper()
 
-    return "[{}] {}".format(subject, assignment)
+    return "[{}] {}".format(subject, name)
 
 def parse_tasks(lines):
+    """
+    Receives lines and parses them into a dictionary of tasks.
+
+    Args:
+        lines: The lines to parse.
+
+    Returns:
+        A dictionary in the format `{ date: tasks }`, where `date` is a `datetime.datetime` type and `tasks` is a list.
+    """
     grouped_tasks = {}
-    due = ""
+    due_parsed = ""
     i_tasks = []
     for line in lines:
-        try: new_due = parse(line)
-        except ValueError: i_tasks.append(parse_task(line))
+        try:
+            new_due = parse(line)
+        except ValueError:
+            i_tasks.append(parse_task(line))
         else:
-            grouped_tasks[due] = i_tasks
+            grouped_tasks[due_parsed] = i_tasks
             i_tasks = []
-            due = new_due
-        grouped_tasks[due] = i_tasks
-    if not grouped_tasks[""]: del grouped_tasks[""]
+            due_parsed = new_due
+        grouped_tasks[due_parsed] = i_tasks
+    if not grouped_tasks[""]:
+        del grouped_tasks[""]
     return grouped_tasks
 
-def create_task(due, assignment):
-    print("Sending \"{}\"...".format(assignment), end="\r")
+def create_task(due, name):
+    """
+    Creates the task on Todoist using its API.
+
+    Args:
+        due: The due date of the task.
+        name: The name of the task.
+    """
+    print("Sending \"{}\"...".format(name), end="\r")
 
     response = requests.post(
         "https://api.todoist.com/rest/v1/tasks",
         data=json.dumps({
-            "content": assignment,
+            "content": name,
             "due_date": due.strftime("%Y-%m-%d"),
             "project_id": 2268855166
         }),
@@ -54,19 +88,24 @@ def create_task(due, assignment):
         }
     )
 
-    try: response.raise_for_status()
-    except requests.exceptions.HTTPError: print("Sending \"{}\"... Error".format(assignment))
-    else: print("Sending \"{}\"... OK".format(assignment))
+    try:
+        response.raise_for_status()
+    except requests.exceptions.HTTPError:
+        print("Sending \"{}\"... Error".format(name))
+    else:
+        print("Sending \"{}\"... OK".format(name))
 
 try:
     open(input_file)
-except FileNotFoundError: print("The specified input file was not found. Please try again!")
+except FileNotFoundError:
+    print("The specified input file was not found. Please try again!")
 else:
     with open(input_file) as file:
         lines = [line.strip("\n") for line in file.readlines() if line.strip("\n")]
     tasks = parse_tasks(lines)
     print()
     for due, assignments in tasks.items():
-        for assignment in assignments: create_task(due, assignment)
-    
+        for assignment in assignments:
+            create_task(due, assignment)
+
     print("\nProgram completed.")
