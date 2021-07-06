@@ -14,6 +14,7 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 AP_PARSER = argparse.ArgumentParser()
 AP_PARSER.add_argument("-i", "--input", help="the input file with the homework list", dest="input")
 AP_PARSER.add_argument("-t", "--type", help="the file type of the input file; default is txt", dest="type")
+AP_PARSER.add_argument("-nc", "--noclear", help="prompt program against clearing the input file on completion", action="store_true")
 AP_ARGS = AP_PARSER.parse_args()
 
 input_type = AP_ARGS.type if AP_ARGS.type else "txt"
@@ -126,10 +127,14 @@ else:
         for assignment in assignments:
             create_task(due, assignment)
 
-    print("\nProgram completed. Clearing input file...", end="\r")
-    with open(input_file, "w"):
-        pass
-    time.sleep(2)
-    print("Program completed. Clearing input file... OK", end="\r")
-    time.sleep(2)
-    print("Program completed.")
+    if not AP_ARGS.noclear:
+        print("\nClearing input file...", end="\r")
+        with open(input_file, "w"):
+            pass
+        time.sleep(1.25)
+        print("Clearing input file... OK")
+        time.sleep(0.5)
+    else:
+        print("\n--noclear command given, refraining from clearing input file.")
+        time.sleep(0.5)
+    print("\nProgram completed.")
