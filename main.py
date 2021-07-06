@@ -3,6 +3,7 @@ import argparse
 import json
 import uuid
 import time
+import datetime
 import requests
 from dotenv import load_dotenv
 from dateutil.parser import parse
@@ -60,7 +61,7 @@ def parse_tasks(lines):
     i_tasks = []
     for line in lines:
         try:
-            new_due = parse(line)
+            new_due = parse(line).date()
         except ValueError:
             i_tasks.append(parse_task(line))
         else:
@@ -80,6 +81,10 @@ def create_task(due, name):
         due: The due date of the task.
         name: The name of the task.
     """
+    if due < datetime.datetime.now().date():
+        print("\"{}\" is overdue, ignoring...".format(name))
+        return
+
     print("Sending \"{}\"...".format(name), end="\r")
 
     response = requests.post(
