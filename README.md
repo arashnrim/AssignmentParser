@@ -28,6 +28,16 @@ Next, install the required modules using `pip`.
 pip install -r requirements.txt
 ```
 
+Afterwards, you will need to retrieve the API key for your Todoist account. Navigate to Todoist settings, then the Integrations tab. Copy your API token.
+
+<img src="todoist.png">
+
+Create a new file called `.env` and include the following inside it; replace `<token>` with your Todoist token:
+
+```
+TODOIST_KEY="<token>"
+```
+
 Once done, you should be able to use AssignmentParser.
 
 ```
